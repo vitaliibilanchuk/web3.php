@@ -12,30 +12,17 @@
 namespace Web3\Contracts\Types;
 
 use InvalidArgumentException;
-use Web3\Contracts\SolidityType;
-use Web3\Contracts\Types\IType;
+use Web3\Contracts\ISolidityTypeFactory;
 
-class Boolean extends SolidityType implements IType
+class Boolean extends SolidityTypeBase
 {
     /**
      * construct
      * 
      * @return void
      */
-    public function __construct()
-    {
-        //
-    }
-
-    /**
-     * isType
-     * 
-     * @param string $name
-     * @return bool
-     */
-    public function isType($name)
-    {
-        return (preg_match('/^bool(\[([0-9]*)\])*$/', $name) === 1);
+    public function __construct(ISolidityTypeFactory $factory) {
+        parent::__construct($factory);
     }
 
     /**
@@ -52,10 +39,10 @@ class Boolean extends SolidityType implements IType
      * inputFormat
      * 
      * @param mixed $value
-     * @param string $name
+     * @param string $typeObj
      * @return string
      */
-    public function inputFormat($value, $name)
+    public function inputFormat($value, $typeObj)
     {
         if (!is_bool($value)) {
             throw new InvalidArgumentException('The value to inputFormat function must be boolean.');
@@ -69,10 +56,10 @@ class Boolean extends SolidityType implements IType
      * outputFormat
      * 
      * @param mixed $value
-     * @param string $name
+     * @param string $typeObj
      * @return string
      */
-    public function outputFormat($value, $name)
+    public function outputFormat($value, $typeObj)
     {
         $value = (int) mb_substr($value, 63, 1);
 

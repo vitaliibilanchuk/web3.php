@@ -36,7 +36,7 @@ class HttpRequestManager extends RequestManager implements IRequestManager
      * @param int $timeout
      * @return void
      */
-    public function __construct($host, $timeout = 1)
+    public function __construct($host, $timeout = 15)
     {
         parent::__construct($host, $timeout);
         $this->client = new Client;
@@ -70,6 +70,7 @@ class HttpRequestManager extends RequestManager implements IRequestManager
             $stream = $res->getBody();
             $json = json_decode($stream);
             $stream->close();
+            //dd($json);
 
             if (JSON_ERROR_NONE !== json_last_error()) {
                 call_user_func($callback, new InvalidArgumentException('json_decode error: ' . json_last_error_msg()), null);

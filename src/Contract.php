@@ -154,15 +154,7 @@ class Contract
         }
         $this->abi = $abiArray;
         $this->eth = new Eth($this->provider);
-        $this->ethabi = new Ethabi([
-            'address' => new Address,
-            'bool' => new Boolean,
-            'bytes' => new Bytes,
-            'dynamicBytes' => new DynamicBytes,
-            'int' => new Integer,
-            'string' => new Str,
-            'uint' => new Uinteger,
-        ]);
+        $this->ethabi = new Ethabi();
     }
 
     /**
@@ -460,7 +452,7 @@ class Contract
             if (!isset($this->bytecode)) {
                 throw new \InvalidArgumentException('Please call bytecode($bytecode) before new().');
             }
-            $params = array_splice($arguments, 0, $input_count);
+            $params = $this->constructParameters($arguments, $constructor['inputs']);
             $data = $this->ethabi->encodeParameters($constructor, $params);
             $transaction = [];
 
@@ -476,6 +468,14 @@ class Contract
                 return call_user_func($callback, null, $transaction);
             });
         }
+    }
+
+    protected function constructParameters($arguments, $inputs) {
+        $ret = [];
+        for($i = 0; $i < count($inputs); $i++) {
+            $ret[$inputs[$i]['name']] = $arguments[$i];
+        }
+        return $ret;
     }
 
     /**
@@ -538,20 +538,16 @@ class Contract
                 if ($hasTransaction) {
                     if ($argsLen - 1 !== count($function['inputs'])) {
                         continue;
-                    } else {
-                        $paramsLen = $argsLen - 1;
                     }
                 } else {
                     if ($argsLen !== count($function['inputs'])) {
                         continue;
-                    } else {
-                        $paramsLen = $argsLen;
                     }
                 }
                 try {
-                    $params = array_splice($arguments, 0, $paramsLen);
+                    $params = $this->constructParameters($arguments, $function['inputs']);
                     $data = $this->ethabi->encodeParameters($function, $params);
-                    $functionName = Utils::jsonMethodToString($function);
+                    $functionName = $this->ethabi->jsonMethodToString($function);
                 } catch (InvalidArgumentException $e) {
                     continue;
                 }
@@ -614,9 +610,9 @@ class Contract
             foreach ($functions as $function) {
                 try {
                     $paramsLen = count($function['inputs']);
-                    $params = array_slice($arguments, 0, $paramsLen);
+                    $params = $this->constructParameters($arguments, $function['inputs']);
                     $data = $this->ethabi->encodeParameters($function, $params);
-                    $functionName = Utils::jsonMethodToString($function);
+                    $functionName = $this->ethabi->jsonMethodToString($function);
                 } catch (InvalidArgumentException $e) {
                     continue;
                 }
@@ -694,7 +690,7 @@ class Contract
                 if (!isset($this->bytecode)) {
                     throw new \InvalidArgumentException('Please call bytecode($bytecode) before estimateGas().');
                 }
-                $params = array_splice($arguments, 0, count($constructor['inputs']));
+                $params = $this->constructParameters($arguments, $constructor['inputs']);
                 $data = $this->ethabi->encodeParameters($constructor, $params);
                 $transaction = [];
 
@@ -744,27 +740,22 @@ class Contract
                     $transaction = [];
                 }
 
-                $params = [];
                 $data = "";
                 $functionName = "";
                 foreach ($functions as $function) {
                     if ($hasTransaction) {
                         if ($argsLen - 1 !== count($function['inputs'])) {
                             continue;
-                        } else {
-                            $paramsLen = $argsLen - 1;
                         }
                     } else {
                         if ($argsLen !== count($function['inputs'])) {
                             continue;
-                        } else {
-                            $paramsLen = $argsLen;
                         }
                     }
                     try {
-                        $params = array_splice($arguments, 0, $paramsLen);
+                        $params = $this->constructParameters($arguments, $function['inputs']);
                         $data = $this->ethabi->encodeParameters($function, $params);
-                        $functionName = Utils::jsonMethodToString($function);
+                        $functionName = $this->ethabi->jsonMethodToString($function);
                     } catch (InvalidArgumentException $e) {
                         continue;
                     }
@@ -813,7 +804,7 @@ class Contract
                 if (!isset($this->bytecode)) {
                     throw new \InvalidArgumentException('Please call bytecode($bytecode) before getData().');
                 }
-                $params = array_splice($arguments, 0, count($constructor['inputs']));
+                $params = $this->constructParameters($arguments, $constructor['inputs']);
                 $data = $this->ethabi->encodeParameters($constructor, $params);
                 $functionData = $this->bytecode . Utils::stripZero($data);
             } else {
@@ -832,8 +823,7 @@ class Contract
                 if (count($functions) < 1) {
                     throw new InvalidArgumentException('Please make sure the method exists.');
                 }
-    
-                $params = $arguments;
+
                 $data = "";
                 $functionName = "";
                 foreach ($functions as $function) {
@@ -841,8 +831,9 @@ class Contract
                         continue;
                     }
                     try {
+                        $params = $this->constructParameters($arguments, $function['inputs']);
                         $data = $this->ethabi->encodeParameters($function, $params);
-                        $functionName = Utils::jsonMethodToString($function);
+                        $functionName = $this->ethabi->jsonMethodToString($function);
                     } catch (InvalidArgumentException $e) {
                         continue;
                     }

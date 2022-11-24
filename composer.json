@@ -1,5 +1,5 @@
 {
-    "name": "web3p/web3.php",
+    "name": "vitaliibilanchuk/web3.php",
     "description": "Ethereum web3 interface.",
     "type": "library",
     "license": "MIT",
@@ -7,6 +7,10 @@
         {
             "name": "sc0Vu",
             "email": "alk03073135@gmail.com"
+        },
+        {
+            "name": "vitaliibilanchuk",
+            "email": "vitaly.bilanchuk@gmail.com"
         }
     ],
     "require": {

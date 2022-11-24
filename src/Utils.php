@@ -399,52 +399,6 @@ class Utils
     }
 
     /**
-     * jsonMethodToString
-     * 
-     * @param stdClass|array $json
-     * @return string
-     */
-    public static function jsonMethodToString($json)
-    {
-        if ($json instanceof stdClass) {
-            // one way to change whole json stdClass to array type
-            // $jsonString = json_encode($json);
-
-            // if (JSON_ERROR_NONE !== json_last_error()) {
-            //     throw new InvalidArgumentException('json_decode error: ' . json_last_error_msg());
-            // }
-            // $json = json_decode($jsonString, true);
-
-            // another way to change whole json to array type but need the depth
-            // $json = self::jsonToArray($json, $depth)
-
-            // another way to change json to array type but not whole json stdClass
-            $json = (array) $json;
-            $typeName = [];
-
-            foreach ($json['inputs'] as $param) {
-                if (isset($param->type)) {
-                    $typeName[] = $param->type;
-                }
-            }
-            return $json['name'] . '(' . implode(',', $typeName) . ')';
-        } elseif (!is_array($json)) {
-            throw new InvalidArgumentException('jsonMethodToString json must be array or stdClass.');
-        }
-        if (isset($json['name']) && strpos($json['name'], '(') > 0) {
-            return $json['name'];
-        }
-        $typeName = [];
-
-        foreach ($json['inputs'] as $param) {
-            if (isset($param['type'])) {
-                $typeName[] = $param['type'];
-            }
-        }
-        return $json['name'] . '(' . implode(',', $typeName) . ')';
-    }
-
-    /**
      * jsonToArray
      * 
      * @param stdClass|array $json

@@ -13,30 +13,17 @@ namespace Web3\Contracts\Types;
 
 use InvalidArgumentException;
 use Web3\Utils;
-use Web3\Contracts\SolidityType;
-use Web3\Contracts\Types\IType;
+use Web3\Contracts\ISolidityTypeFactory;
 
-class DynamicBytes extends SolidityType implements IType
+class DynamicBytes extends SolidityTypeBase
 {
     /**
      * construct
      * 
      * @return void
      */
-    public function __construct()
-    {
-        //
-    }
-
-    /**
-     * isType
-     * 
-     * @param string $name
-     * @return bool
-     */
-    public function isType($name)
-    {
-        return (preg_match('/^bytes(\[([0-9]*)\])*$/', $name) === 1);
+    public function __construct(ISolidityTypeFactory $factory) {
+        parent::__construct($factory);
     }
 
     /**
@@ -53,10 +40,10 @@ class DynamicBytes extends SolidityType implements IType
      * inputFormat
      * 
      * @param mixed $value
-     * @param string $name
+     * @param string $typeObj
      * @return string
      */
-    public function inputFormat($value, $name)
+    public function inputFormat($value, $typeObj)
     {
         if (!Utils::isHex($value)) {
             throw new InvalidArgumentException('The value to inputFormat must be hex bytes.');
@@ -84,10 +71,10 @@ class DynamicBytes extends SolidityType implements IType
      * outputFormat
      * 
      * @param mixed $value
-     * @param string $name
+     * @param string $typeObj
      * @return string
      */
-    public function outputFormat($value, $name)
+    public function outputFormat($value, $typeObj)
     {
         $checkZero = str_replace('0', '', $value);
 
