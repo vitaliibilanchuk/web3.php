@@ -12,32 +12,19 @@
 namespace Web3\Contracts\Types;
 
 use InvalidArgumentException;
-use Web3\Contracts\SolidityType;
-use Web3\Contracts\Types\IType;
 use Web3\Utils;
+use Web3\Contracts\ISolidityTypeFactory;
 use Web3\Formatters\IntegerFormatter;
 
-class Address extends SolidityType implements IType
+class Address extends SolidityTypeBase
 {
     /**
      * construct
      * 
      * @return void
      */
-    public function __construct()
-    {
-        //
-    }
-
-    /**
-     * isType
-     * 
-     * @param string $name
-     * @return bool
-     */
-    public function isType($name)
-    {
-        return (preg_match('/^address(\[([0-9]*)\])*$/', $name) === 1);
+    public function __construct(ISolidityTypeFactory $factory) {
+        parent::__construct($factory);
     }
 
     /**
@@ -55,10 +42,10 @@ class Address extends SolidityType implements IType
      * to do: iban
      * 
      * @param mixed $value
-     * @param string $name
+     * @param string $typeObj
      * @return string
      */
-    public function inputFormat($value, $name)
+    public function inputFormat($value, $typeObj)
     {
         $value = (string) $value;
 
@@ -78,10 +65,10 @@ class Address extends SolidityType implements IType
      * outputFormat
      * 
      * @param mixed $value
-     * @param string $name
+     * @param string $typeObj
      * @return string
      */
-    public function outputFormat($value, $name)
+    public function outputFormat($value, $typeObj)
     {
         return '0x' . mb_substr($value, 24, 40);
     }

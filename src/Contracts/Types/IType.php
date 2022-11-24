@@ -11,16 +11,13 @@
 
 namespace Web3\Contracts\Types;
 
+class EncodeResult {
+    public $head;
+    public $tail;
+};
+
 interface IType
 {
-    /**
-     * isType
-     * 
-     * @param string $name
-     * @return bool
-     */
-    public function isType($name);
-
     /**
      * isDynamicType
      * 
@@ -32,8 +29,16 @@ interface IType
      * inputFormat
      * 
      * @param mixed $value
-     * @param string $name
+     * @param string $typeObj
      * @return string
      */
-    public function inputFormat($value, $name);
+    public function inputFormat($value, $typeObj);
+
+    public function getSignature($typeObj);
+
+    public function encode($value, $typeObj, $tailOffset) : EncodeResult;
+
+    public function getHeadLength($typeObj);
+
+    public function decode($value, $typeObj, $offset);
 }

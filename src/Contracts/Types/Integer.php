@@ -12,32 +12,19 @@
 namespace Web3\Contracts\Types;
 
 use Web3\Utils;
-use Web3\Contracts\SolidityType;
-use Web3\Contracts\Types\IType;
+use Web3\Contracts\ISolidityTypeFactory;
 use Web3\Formatters\IntegerFormatter;
 use Web3\Formatters\BigNumberFormatter;
 
-class Integer extends SolidityType implements IType
+class Integer extends SolidityTypeBase
 {
     /**
      * construct
      * 
      * @return void
      */
-    public function __construct()
-    {
-        //
-    }
-
-    /**
-     * isType
-     * 
-     * @param string $name
-     * @return bool
-     */
-    public function isType($name)
-    {
-        return (preg_match('/^int([0-9]{1,})?(\[([0-9]*)\])*$/', $name) === 1);
+    public function __construct(ISolidityTypeFactory $factory) {
+        parent::__construct($factory);
     }
 
     /**
@@ -54,10 +41,10 @@ class Integer extends SolidityType implements IType
      * inputFormat
      * 
      * @param mixed $value
-     * @param string $name
+     * @param string $typeObj
      * @return string
      */
-    public function inputFormat($value, $name)
+    public function inputFormat($value, $typeObj)
     {
         return IntegerFormatter::format($value);
     }
@@ -66,10 +53,10 @@ class Integer extends SolidityType implements IType
      * outputFormat
      * 
      * @param mixed $value
-     * @param string $name
+     * @param string $typeObj
      * @return string
      */
-    public function outputFormat($value, $name)
+    public function outputFormat($value, $typeObj)
     {
         $match = [];
 

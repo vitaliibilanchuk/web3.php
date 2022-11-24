@@ -12,32 +12,19 @@
 namespace Web3\Contracts\Types;
 
 use Web3\Utils;
-use Web3\Contracts\SolidityType;
-use Web3\Contracts\Types\IType;
+use Web3\Contracts\ISolidityTypeFactory;
 use Web3\Formatters\IntegerFormatter;
 use Web3\Formatters\BigNumberFormatter;
 
-class Str extends SolidityType implements IType
+class Str extends DynamicSolidityType
 {
     /**
      * construct
      * 
      * @return void
      */
-    public function __construct()
-    {
-        //
-    }
-
-    /**
-     * isType
-     * 
-     * @param string $name
-     * @return bool
-     */
-    public function isType($name)
-    {
-        return (preg_match('/^string(\[([0-9]*)\])*$/', $name) === 1);
+    public function __construct(ISolidityTypeFactory $factory) {
+        parent::__construct($factory);
     }
 
     /**
@@ -54,10 +41,10 @@ class Str extends SolidityType implements IType
      * inputFormat
      * 
      * @param mixed $value
-     * @param string $name
+     * @param string $typeObj
      * @return string
      */
-    public function inputFormat($value, $name)
+    public function inputFormat($value, $typeObj)
     {
         $value = Utils::toHex($value);
         $prefix = IntegerFormatter::format(mb_strlen($value) / 2);
@@ -71,10 +58,10 @@ class Str extends SolidityType implements IType
      * outputFormat
      * 
      * @param mixed $value
-     * @param string $name
+     * @param string $typeObj
      * @return string
      */
-    public function outputFormat($value, $name)
+    public function outputFormat($value, $typeObj)
     {
         $strLen = mb_substr($value, 0, 64);
         $strValue = mb_substr($value, 64);
@@ -86,5 +73,16 @@ class Str extends SolidityType implements IType
         $strValue = mb_substr($strValue, 0, (int) $strLen * 2);
 
         return Utils::hexToBin($strValue);
+    }
+
+    public function decodeTail($value, $typeObj) {
+        $length = $this->staticPartLength($typeObj);
+        $param = mb_substr($value, 32 * 2, $length * 2);
+
+        return $this->outputFormat($value, $typeObj);
+    }
+
+    protected function encodeTail($value, $typeObj) : string {
+        return $this->inputFormat($value, $typeObj);
     }
 }
