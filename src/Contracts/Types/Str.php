@@ -28,16 +28,6 @@ class Str extends DynamicSolidityType
     }
 
     /**
-     * isDynamicType
-     * 
-     * @return bool
-     */
-    public function isDynamicType()
-    {
-        return true;
-    }
-
-    /**
      * inputFormat
      * 
      * @param mixed $value

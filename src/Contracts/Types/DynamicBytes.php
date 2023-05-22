@@ -15,7 +15,7 @@ use InvalidArgumentException;
 use Web3\Utils;
 use Web3\Contracts\ISolidityTypeFactory;
 
-class DynamicBytes extends SolidityTypeBase
+class DynamicBytes extends DynamicSolidityType
 {
     /**
      * construct
@@ -24,16 +24,6 @@ class DynamicBytes extends SolidityTypeBase
      */
     public function __construct(ISolidityTypeFactory $factory) {
         parent::__construct($factory);
-    }
-
-    /**
-     * isDynamicType
-     * 
-     * @return bool
-     */
-    public function isDynamicType()
-    {
-        return true;
     }
 
     /**
@@ -85,5 +75,16 @@ class DynamicBytes extends SolidityTypeBase
         $length = 2 * $size;
         
         return '0x' . mb_substr($value, 64, $length);
+    }
+
+    public function decodeTail($value, $typeObj) {
+        $length = $this->staticPartLength($typeObj);
+        $param = mb_substr($value, 32 * 2, $length * 2);
+
+        return $this->outputFormat($value, $typeObj);
+    }
+
+    protected function encodeTail($value, $typeObj) : string {
+        return $this->inputFormat($value, $typeObj);
     }
 }

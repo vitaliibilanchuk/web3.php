@@ -39,7 +39,7 @@ class SolidityTypeFactory implements ISolidityTypeFactory {
         switch($typeName) {
             case 'address': return new Address($this);
             case 'bool': return new Boolean($this);
-            case 'bytes': return new Bytes($this);
+            case 'bytes': return new DynamicBytes($this);
             case 'dynamicBytes': return new DynamicBytes($this);
             case 'int': return new Integer($this);
             case 'string': return new Str($this);
@@ -50,6 +50,9 @@ class SolidityTypeFactory implements ISolidityTypeFactory {
             case 'uint64':
             case 'uint128':
             case 'uint256': return new Uinteger($this);
+            case 'bytes8':
+            case 'bytes16':
+            case 'bytes32': return new Bytes($this);
             case 'tuple': 
             {
                 if(isset($typeObj['components']) && Tuple::isDynamicTuple($typeObj, $this)) {
