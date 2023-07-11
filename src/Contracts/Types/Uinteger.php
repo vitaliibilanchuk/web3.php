@@ -58,6 +58,9 @@ class Uinteger extends SolidityTypeBase
      */
     public function outputFormat($value, $typeObj)
     {
+        if(empty($value))
+            throw new \InvalidArgumentException("Empty uinteger value");
+
         $match = [];
 
         if (preg_match('/^[0]+([a-f0-9]+)$/', $value, $match) === 1) {
