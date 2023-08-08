@@ -4,7 +4,7 @@ namespace Web3\Contracts\Types;
 
 use Web3\Utils;
 use Web3\Contracts\ISolidityTypeFactory;
-use Web3\Formatters\IntegerFormatter;
+use Web3\Formatters\UIntegerFormatter;
 
 class DynamicArrayType extends DynamicSolidityType
 {
@@ -24,16 +24,6 @@ class DynamicArrayType extends DynamicSolidityType
     public function decodeTail($value, $typeObj) {
         $arrayLength = (int) Utils::toBn('0x' . mb_substr($value, 0, 64))->toString();
 
-        /*$nestedTypeObj = self::nestedTypeObj($typeObj);
-
-        $nestedStaticPartLength = $this->staticPartLength($nestedTypeObj);
-        $roundedNestedStaticPartLength = floor(($nestedStaticPartLength + 31) / 32) * 32;
-        $result = [];
-
-        for ($i=0; $i<$length * $roundedNestedStaticPartLength; $i+=$roundedNestedStaticPartLength) {
-            $result[] = $this->typeFactory->getSolidityType($nestedTypeObj)->decode(mb_substr($value, $arrayStart * 2), $nestedTypeObj, $i);
-        }
-        return $result;*/
         return $this->staticArrayType_->decodeArray($value, $typeObj, $arrayLength, 32);
     }
 
@@ -41,9 +31,8 @@ class DynamicArrayType extends DynamicSolidityType
 
         // put array length to the begining
         $inArrayLength = count($value);
-        //$arrayHead = IntegerFormatter::format($arrayLength);
         $result = new EncodeResult();
-        $result->head = IntegerFormatter::format($inArrayLength);
+        $result->head = UIntegerFormatter::format($inArrayLength);
 
         // define length of an element
         $nestedTypeObj = self::nestedTypeObj($typeObj);

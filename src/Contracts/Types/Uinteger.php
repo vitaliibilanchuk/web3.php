@@ -13,7 +13,7 @@ namespace Web3\Contracts\Types;
 
 use Web3\Utils;
 use Web3\Contracts\ISolidityTypeFactory;
-use Web3\Formatters\IntegerFormatter;
+use Web3\Formatters\UIntegerFormatter;
 use Web3\Formatters\BigNumberFormatter;
 
 class Uinteger extends SolidityTypeBase
@@ -46,7 +46,7 @@ class Uinteger extends SolidityTypeBase
      */
     public function inputFormat($value, $typeObj)
     {
-        return IntegerFormatter::format($value);
+        return UIntegerFormatter::format($value);
     }
 
     /**

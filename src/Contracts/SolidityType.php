@@ -12,7 +12,7 @@
 namespace Web3\Contracts;
 
 use Web3\Utils;
-use Web3\Formatters\IntegerFormatter;
+use Web3\Formatters\UIntegerFormatter;
 
 class SolidityType
 {
@@ -202,7 +202,7 @@ class SolidityType
             $length = count($value);
             $nestedName = $this->nestedName($name);
             $result = [];
-            $result[] = IntegerFormatter::format($length);
+            $result[] = UIntegerFormatter::format($length);
 
             foreach ($value as $val) {
                 $result[] = $this->encode($val, $nestedName);

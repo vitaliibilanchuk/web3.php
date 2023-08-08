@@ -3,7 +3,7 @@
 namespace Web3\Contracts\Types;
 use Web3\Utils;
 use Web3\Contracts\ISolidityTypeFactory;
-use Web3\Formatters\IntegerFormatter;
+use Web3\Formatters\UIntegerFormatter;
 
 abstract class DynamicSolidityType extends SolidityTypeBase {
     protected ISolidityTypeFactory $typeFactory;
@@ -33,7 +33,7 @@ abstract class DynamicSolidityType extends SolidityTypeBase {
 
     public function encode($value, $typeObj, $tailOffset) : EncodeResult {
         $result = new EncodeResult();
-        $result->head = IntegerFormatter::format($tailOffset);
+        $result->head = UIntegerFormatter::format($tailOffset);
         $result->tail = $this->encodeTail($value, $typeObj);
         
         return $result;

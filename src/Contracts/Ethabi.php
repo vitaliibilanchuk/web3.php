@@ -14,7 +14,6 @@ namespace Web3\Contracts;
 use InvalidArgumentException;
 use stdClass;
 use Web3\Utils;
-use Web3\Formatters\IntegerFormatter;
 use Web3\Contracts\Types\SolidityTypeBase;
 
 class Ethabi

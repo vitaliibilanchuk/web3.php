@@ -23,7 +23,6 @@ use Web3\Contracts\Types\Address;
 use Web3\Contracts\Types\Boolean;
 use Web3\Contracts\Types\Bytes;
 use Web3\Contracts\Types\DynamicBytes;
-use Web3\Contracts\Types\Integer;
 use Web3\Contracts\Types\Str;
 use Web3\Contracts\Types\Uinteger;
 use Web3\Validators\AddressValidator;
@@ -654,11 +653,11 @@ class Contract
             $transaction['to'] = $this->toAddress;
             $transaction['data'] = $functionSignature . Utils::stripZero($data);
 
-            $this->eth->call($transaction, $defaultBlock, function ($err, $transaction) use ($callback, $function){
+            $this->eth->call($transaction, $defaultBlock, function ($err, $response) use ($callback, $function){
                 if ($err !== null) {
                     return call_user_func($callback, $err, null);
                 }
-                $decodedTransaction = $this->ethabi->decodeParameters($function, $transaction);
+                $decodedTransaction = $this->ethabi->decodeParameters($function, $response);
 
                 return call_user_func($callback, null, $decodedTransaction);
             });

@@ -14,7 +14,7 @@ namespace Web3\Formatters;
 use InvalidArgumentException;
 use Web3\Utils;
 use Web3\Formatters\IFormatter;
-use Web3\Formatters\IntegerFormatter;
+use Web3\Formatters\UIntegerFormatter;
 
 class AddressFormatter implements IFormatter
 {
@@ -37,7 +37,7 @@ class AddressFormatter implements IFormatter
             }
             return '0x' . $value;
         }
-        $value = IntegerFormatter::format($value, 40);
+        $value = UIntegerFormatter::format($value, 40);
 
         return '0x' . $value;
     }

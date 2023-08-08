@@ -14,7 +14,7 @@ namespace Web3\Contracts\Types;
 use InvalidArgumentException;
 use Web3\Utils;
 use Web3\Contracts\ISolidityTypeFactory;
-use Web3\Formatters\IntegerFormatter;
+use Web3\Formatters\UIntegerFormatter;
 
 class Address extends SolidityTypeBase
 {
@@ -56,7 +56,7 @@ class Address extends SolidityTypeBase
                 $value = Utils::stripZero($value);
             }
         }
-        $value = IntegerFormatter::format($value);
+        $value = UIntegerFormatter::format($value);
 
         return $value;
     }

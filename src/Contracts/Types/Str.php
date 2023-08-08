@@ -13,7 +13,7 @@ namespace Web3\Contracts\Types;
 
 use Web3\Utils;
 use Web3\Contracts\ISolidityTypeFactory;
-use Web3\Formatters\IntegerFormatter;
+use Web3\Formatters\UIntegerFormatter;
 use Web3\Formatters\BigNumberFormatter;
 
 class Str extends DynamicSolidityType
@@ -37,7 +37,7 @@ class Str extends DynamicSolidityType
     public function inputFormat($value, $typeObj)
     {
         $value = Utils::toHex($value);
-        $prefix = IntegerFormatter::format(mb_strlen($value) / 2);
+        $prefix = UIntegerFormatter::format(mb_strlen($value) / 2);
         $l = floor((mb_strlen($value) + 63) / 64);
         $padding = (($l * 64 - mb_strlen($value) + 1) >= 0) ? $l * 64 - mb_strlen($value) : 0;
 
