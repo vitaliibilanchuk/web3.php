@@ -87,8 +87,9 @@ class Web3
      * @param string|\Web3\Providers\Provider $provider
      * @return void
      */
-    public function __construct($provider)
+    public function __construct($provider, $httpTimeout = 60)
     {
+        HttpRequestManager::$s_timeout = $httpTimeout;
         if (is_string($provider) && (filter_var($provider, FILTER_VALIDATE_URL) !== false)) {
             // check the uri schema
             if (preg_match('/^https?:\/\//', $provider) === 1) {
