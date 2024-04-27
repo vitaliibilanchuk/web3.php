@@ -5,9 +5,9 @@ namespace Web3\Contracts\Types;
 use Web3\Contracts\ISolidityTypeFactory;
 
 abstract class SolidityTypeBase implements IType {
-    protected ISolidityTypeFactory $typeFactory;
+    protected ?ISolidityTypeFactory $typeFactory;
 
-    public function __construct(ISolidityTypeFactory $factory) {
+    public function __construct(ISolidityTypeFactory $factory = null) {
         $this->typeFactory = $factory;
     }
 
@@ -82,7 +82,7 @@ abstract class SolidityTypeBase implements IType {
 
     public function staticPartLength($typeObj)
     {
-        if($this->typeFactory->getSolidityType($typeObj)->isDynamicType()) {
+        if($this->typeFactory != null && $this->typeFactory->getSolidityType($typeObj)->isDynamicType()) {
             return 32;
         }
 

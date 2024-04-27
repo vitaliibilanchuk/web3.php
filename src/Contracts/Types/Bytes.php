@@ -22,7 +22,7 @@ class Bytes extends SolidityTypeBase
      * 
      * @return void
      */
-    public function __construct(ISolidityTypeFactory $factory) {
+    public function __construct(ISolidityTypeFactory $factory = null) {
         parent::__construct($factory);
     }
 
@@ -46,7 +46,7 @@ class Bytes extends SolidityTypeBase
     public function inputFormat($value, $typeObj)
     {
         if (!Utils::isHex($value)) {
-            throw new InvalidArgumentException('The value to inputFormat must be hex bytes.');
+            throw new InvalidArgumentException('The value [' . $value . '] to inputFormat must be hex bytes.');
         }
         $value = Utils::stripZero($value);
 

@@ -8,7 +8,7 @@ class StaticArrayDynamicType extends DynamicSolidityType
 {
     protected StaticArrayType $staticArrayType_;
 
-    public function __construct(ISolidityTypeFactory $factory) {
+    public function __construct(ISolidityTypeFactory $factory = null) {
         parent::__construct($factory);
         $this->staticArrayType_ = new StaticArrayType($factory);
     }

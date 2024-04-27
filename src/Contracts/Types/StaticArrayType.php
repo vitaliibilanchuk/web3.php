@@ -5,9 +5,11 @@ namespace Web3\Contracts\Types;
 use InvalidArgumentException;
 use Web3\Contracts\ISolidityTypeFactory;
 
+use Exception;
+
 class StaticArrayType extends SolidityTypeBase
 {
-    public function __construct(ISolidityTypeFactory $factory) {
+    public function __construct(ISolidityTypeFactory $factory = null) {
         parent::__construct($factory);
     }
 
@@ -24,6 +26,8 @@ class StaticArrayType extends SolidityTypeBase
     public function getHeadLength($typeObj) {
 
         $nestedTypeObj = self::nestedTypeObj($typeObj);
+
+        if($this->typeFactory == null) throw new Exception("Type factory is not set");
         $solidityTypeObj = $this->typeFactory->getSolidityType($nestedTypeObj);
 
         return $this->staticArrayLength($typeObj['type']) * $solidityTypeObj->getHeadLength($nestedTypeObj);
@@ -52,6 +56,8 @@ class StaticArrayType extends SolidityTypeBase
 
     public function getSignature($typeObj) {
         $nestedTypeObj = self::nestedTypeObj($typeObj);
+
+        if($this->typeFactory == null) throw new Exception("Type factory is not set");
         $solidityTypeObj = $this->typeFactory->getSolidityType($nestedTypeObj);
         return $solidityTypeObj->getSignature($nestedTypeObj) . '[' . $this->staticArrayLength($typeObj['type']) . ']';
     }
@@ -62,6 +68,8 @@ class StaticArrayType extends SolidityTypeBase
         $result = new EncodeResult();
 
         $nestedTypeObj = self::nestedTypeObj($typeObj);
+
+        if($this->typeFactory == null) throw new Exception("Type factory is not set");
         $solidityTypeObj = $this->typeFactory->getSolidityType($nestedTypeObj);
 
         $arrayLength = $this->staticArrayLength($typeObj['type']);
@@ -94,6 +102,7 @@ class StaticArrayType extends SolidityTypeBase
     public function decodeArray($value, $typeObj, $arrayLength, $offset) {
         $nestedTypeObj = SolidityTypeBase::nestedTypeObj($typeObj);
 
+        if($this->typeFactory == null) throw new Exception("Type factory is not set");
         $solidityTypeObj = $this->typeFactory->getSolidityType($nestedTypeObj);
 
         $nestedStaticPartLength = $solidityTypeObj->staticPartLength($nestedTypeObj);

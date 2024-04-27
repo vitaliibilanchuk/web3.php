@@ -21,7 +21,7 @@ class Boolean extends SolidityTypeBase
      * 
      * @return void
      */
-    public function __construct(ISolidityTypeFactory $factory) {
+    public function __construct(ISolidityTypeFactory $factory = null) {
         parent::__construct($factory);
     }
 

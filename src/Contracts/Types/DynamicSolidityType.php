@@ -6,10 +6,10 @@ use Web3\Contracts\ISolidityTypeFactory;
 use Web3\Formatters\UIntegerFormatter;
 
 abstract class DynamicSolidityType extends SolidityTypeBase {
-    protected ISolidityTypeFactory $typeFactory;
+    //protected ISolidityTypeFactory $typeFactory;
 
-    public function __construct(ISolidityTypeFactory $factory) {
-        $this->typeFactory = $factory;
+    public function __construct(ISolidityTypeFactory $factory = null) {
+        parent::__construct($factory);
     }
 
     public function isDynamicType()

@@ -553,7 +553,7 @@ class Contract
                 break;
             }
             if (empty($data) || empty($functionName)) {
-                throw new InvalidArgumentException('Please make sure you have put all function params and callback.');
+                throw new InvalidArgumentException('send. Please make sure you have put all function params and callback.');
             }
             $functionSignature = $this->ethabi->encodeFunctionSignature($functionName);
             $transaction['to'] = $this->toAddress;
@@ -613,6 +613,9 @@ class Contract
                     $data = $this->ethabi->encodeParameters($function, $params);
                     $functionName = $this->ethabi->jsonMethodToString($function);
                 } catch (InvalidArgumentException $e) {
+                    if (count($functions) == 1) {
+                        throw $e;
+                    }
                     continue;
                 }
                 break;
@@ -756,6 +759,9 @@ class Contract
                         $data = $this->ethabi->encodeParameters($function, $params);
                         $functionName = $this->ethabi->jsonMethodToString($function);
                     } catch (InvalidArgumentException $e) {
+                        if (count($functions) == 1) {
+                            throw $e;
+                        }
                         continue;
                     }
                     break;
@@ -834,12 +840,15 @@ class Contract
                         $data = $this->ethabi->encodeParameters($function, $params);
                         $functionName = $this->ethabi->jsonMethodToString($function);
                     } catch (InvalidArgumentException $e) {
+                        if (count($functions) == 1) {
+                            throw $e;
+                        }
                         continue;
                     }
                     break;
                 }
                 if (empty($data) || empty($functionName)) {
-                    throw new InvalidArgumentException('Please make sure you have put all function params and callback.');
+                    throw new InvalidArgumentException('getData. Please make sure you have put all function params and callback.');
                 }
                 $functionSignature = $this->ethabi->encodeFunctionSignature($functionName);
                 $functionData = Utils::stripZero($functionSignature) . Utils::stripZero($data);

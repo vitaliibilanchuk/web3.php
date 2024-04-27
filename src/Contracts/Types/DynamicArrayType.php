@@ -6,17 +6,22 @@ use Web3\Utils;
 use Web3\Contracts\ISolidityTypeFactory;
 use Web3\Formatters\UIntegerFormatter;
 
+use Exception;
+
 class DynamicArrayType extends DynamicSolidityType
 {
     protected StaticArrayType $staticArrayType_;
 
-    public function __construct(ISolidityTypeFactory $factory) {
+    public function __construct(ISolidityTypeFactory $factory = null) {
         parent::__construct($factory);
         $this->staticArrayType_ = new StaticArrayType($factory);
     }
 
     public function getSignature($typeObj) {
         $nestedTypeObj = self::nestedTypeObj($typeObj);
+        
+        if($this->typeFactory == null) throw new Exception("Type factory is not set");
+        
         $solidityTypeObj = $this->typeFactory->getSolidityType($nestedTypeObj);
         return $solidityTypeObj->getSignature($nestedTypeObj) . '[]';
     }
@@ -36,7 +41,9 @@ class DynamicArrayType extends DynamicSolidityType
 
         // define length of an element
         $nestedTypeObj = self::nestedTypeObj($typeObj);
+
         // define Solity type object
+        if($this->typeFactory == null) throw new Exception("Type factory is not set");
         $solidityTypeObj = $this->typeFactory->getSolidityType($nestedTypeObj);      
 
         $nestedStaticPartLength = $solidityTypeObj->staticPartLength($nestedTypeObj);

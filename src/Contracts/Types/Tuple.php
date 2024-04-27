@@ -5,9 +5,11 @@ namespace Web3\Contracts\Types;
 use Web3\Utils;
 use Web3\Contracts\ISolidityTypeFactory;
 
+use Exception;
+
 class Tuple extends SolidityTypeBase
 {
-    public function __construct(ISolidityTypeFactory $factory) {
+    public function __construct(ISolidityTypeFactory $factory = null) {
         parent::__construct($factory);
     }
 
@@ -50,6 +52,8 @@ class Tuple extends SolidityTypeBase
     {
         $components = $typeObj["components"];
         $typesLength = count($components);
+
+        if($this->typeFactory == null) throw new Exception("Type factory is not set");
         $solidityTypes = $this->typeFactory->getSolidityTypes($components);
 
         $tupleParams = [];
@@ -64,6 +68,7 @@ class Tuple extends SolidityTypeBase
         $length = 0;
         foreach ($typeObj["components"] as $component)
         {
+            if($this->typeFactory == null) throw new Exception("Type factory is not set");
             $length += $this->typeFactory->getSolidityType($component)->getHeadLength($component);
         }
 
@@ -73,6 +78,8 @@ class Tuple extends SolidityTypeBase
     public function encode($value, $typeObj, $tailOffset) : EncodeResult {
         $components = $typeObj["components"];
         $typesLength = count($components);
+
+        if($this->typeFactory == null) throw new Exception("Type factory is not set");
         $solidityTypes = $this->typeFactory->getSolidityTypes($components);
 
         $headLength = 0;
@@ -84,7 +91,9 @@ class Tuple extends SolidityTypeBase
 
         $internalTailOffset = $headLength;
         for($i = 0; $i < $typesLength; $i++) {
-            $encodeResult = $solidityTypes[$i]->encode($value[$components[$i]['name']], $components[$i], $internalTailOffset);
+            $param = array_key_exists($components[$i]['name'], $value) ? $value[$components[$i]['name']] : $value[$i];
+
+            $encodeResult = $solidityTypes[$i]->encode($param, $components[$i], $internalTailOffset);
             
             $ret->head .= $encodeResult->head;
             $ret->tail .= $encodeResult->tail;
@@ -98,6 +107,8 @@ class Tuple extends SolidityTypeBase
     public function decode($value, $typeObj, $offset) {
         $outputTypes = $typeObj["components"];
         $typesLength = count($outputTypes);
+
+        if($this->typeFactory == null) throw new Exception("Type factory is not set");
         $solidityTypes = $this->typeFactory->getSolidityTypes($outputTypes);
 
         $offsets = array_fill(0, $typesLength, 0);

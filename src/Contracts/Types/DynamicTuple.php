@@ -8,7 +8,7 @@ use Web3\Contracts\ISolidityTypeFactory;
 class DynamicTuple extends DynamicSolidityType
 {
     protected Tuple $tuple_;
-    public function __construct(ISolidityTypeFactory $factory) {
+    public function __construct(ISolidityTypeFactory $factory = null) {
         parent::__construct($factory);
         $this->tuple_ = new Tuple($factory);
     }
