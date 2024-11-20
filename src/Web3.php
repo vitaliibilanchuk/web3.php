@@ -16,6 +16,7 @@ use Web3\Net;
 use Web3\Personal;
 use Web3\Shh;
 use Web3\Utils;
+use Web3\Factories\Web3FactoryStorage;
 use Web3\Providers\Provider;
 use Web3\Providers\HttpProvider;
 use Web3\RequestManagers\RequestManager;
@@ -93,7 +94,7 @@ class Web3
         if (is_string($provider) && (filter_var($provider, FILTER_VALIDATE_URL) !== false)) {
             // check the uri schema
             if (preg_match('/^https?:\/\//', $provider) === 1) {
-                $requestManager = new HttpRequestManager($provider);
+                $requestManager = Web3FactoryStorage::getWeb3Factory()->createIRequestManager($provider);
 
                 $this->provider = new HttpProvider($requestManager);
             }

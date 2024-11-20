@@ -15,7 +15,6 @@ use InvalidArgumentException;
 use Web3\Providers\Provider;
 use Web3\Providers\HttpProvider;
 use Web3\RequestManagers\RequestManager;
-use Web3\RequestManagers\HttpRequestManager;
 use Web3\Utils;
 use Web3\Eth;
 use Web3\Contracts\Ethabi;
@@ -25,6 +24,7 @@ use Web3\Contracts\Types\Bytes;
 use Web3\Contracts\Types\DynamicBytes;
 use Web3\Contracts\Types\Str;
 use Web3\Contracts\Types\Uinteger;
+use Web3\Factories\Web3FactoryStorage;
 use Web3\Validators\AddressValidator;
 use Web3\Validators\HexValidator;
 use Web3\Validators\StringValidator;
@@ -117,7 +117,7 @@ class Contract
         if (is_string($provider) && (filter_var($provider, FILTER_VALIDATE_URL) !== false)) {
             // check the uri schema
             if (preg_match('/^https?:\/\//', $provider) === 1) {
-                $requestManager = new HttpRequestManager($provider);
+                $requestManager = Web3FactoryStorage::getWeb3Factory()->createIRequestManager($provider);
 
                 $this->provider = new HttpProvider($requestManager);
             }
