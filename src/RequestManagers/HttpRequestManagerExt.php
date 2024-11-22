@@ -9,6 +9,13 @@
 
 namespace Web3\RequestManagers;
 
+use InvalidArgumentException;
+use Psr\Http\Message\StreamInterface;
+use RuntimeException as RPCException;
+
+use GuzzleHttp\Exception\RequestException;
+use GuzzleHttp\Client;
+use Web3\RequestManagers\HttpRequestManager;
 
 class HttpRequestManagerExt extends HttpRequestManager
 {
