@@ -14,6 +14,7 @@ namespace Web3\Providers;
 use Web3\Providers\Provider;
 use Web3\Providers\IProvider;
 use Web3\RequestManagers\RequestManager;
+use Exception;
 
 class HttpProvider extends Provider implements IProvider
 {
@@ -51,11 +52,15 @@ class HttpProvider extends Provider implements IProvider
                 if ($err !== null) {
                     return call_user_func($callback, $err, null);
                 }
-                if (!is_array($res)) {
-                    $res = $method->transform([$res], $method->outputFormatters);
-                    return call_user_func($callback, null, $res[0]);
+                try {
+                    if (!is_array($res)) {
+                        $res = $method->transform([$res], $method->outputFormatters)[0];
+                    } else {
+                        $res = $method->transform($res, $method->outputFormatters);
+                    }
+                } catch(Exception $ex) {
+                    return call_user_func($callback, $ex, null);
                 }
-                $res = $method->transform($res, $method->outputFormatters);
 
                 return call_user_func($callback, null, $res);
             };

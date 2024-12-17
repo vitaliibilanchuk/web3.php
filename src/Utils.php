@@ -484,12 +484,13 @@ class Utils
                 $negative1 = new BigNumber(-1);
             }
             if (self::isZeroPrefixed($number) || preg_match('/^[0-9a-f]+$/i', $number) === 1) {
-                $number = self::stripZero($number);
-                $bn = new BigNumber($number, 16);
-            } elseif (empty($number)) {
-                $bn = new BigNumber(0);
+                $number_ = self::stripZero($number);
+                if (0 == strlen($number_)) {
+                    throw new InvalidArgumentException('toBn number [' . print_r($number, 1) . '] must be valid hex string.');
+                }
+                $bn = new BigNumber($number_, 16);
             } else {
-                throw new InvalidArgumentException('toBn number must be valid hex string.');
+                throw new InvalidArgumentException('toBn number [' . print_r($number, 1) . '] must be valid hex string.');
             }
             if (isset($negative1)) {
                 $bn = $bn->multiply($negative1);

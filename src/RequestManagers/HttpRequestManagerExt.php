@@ -99,7 +99,7 @@ class HttpRequestManagerExt extends HttpRequestManager
 
                     call_user_func($callback, new RPCException(mb_ereg_replace('Error: ', '', $error->message), $error->code), null);
                 } else {
-                    call_user_func($callback, new RPCException('Something wrong happened.'), null);
+                    call_user_func($callback, new RPCException('Something wrong happened: ' . print_r($json, true)), null);
                 }
             }
         } catch (RequestException $err) {

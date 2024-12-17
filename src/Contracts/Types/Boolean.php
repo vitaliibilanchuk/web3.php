@@ -61,8 +61,6 @@ class Boolean extends SolidityTypeBase
      */
     public function outputFormat($value, $typeObj)
     {
-        $value = (int) mb_substr($value, 63, 1);
-
-        return (bool) $value;
+        return Integer::outputFormatImpl($value, $typeObj)->toString() != '0';
     }
 }

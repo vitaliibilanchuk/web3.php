@@ -58,6 +58,11 @@ class Integer extends SolidityTypeBase
      */
     public function outputFormat($value, $typeObj)
     {
+        return self::outputFormatImpl($value, $typeObj);
+    }
+
+    public static function outputFormatImpl($value, $typeObj)
+    {
         $match = [];
 
         if (preg_match('/^[0]+([a-f0-9]+)$/', $value, $match) === 1) {

@@ -66,4 +66,13 @@ class BooleanTypeTest extends TestCase
             $this->assertEquals($solidityType->isType($type['value']), $type['result']);
         }
     }
+
+    
+    public function testBooleanOutputFormat()
+    {
+        $type = $this->solidityType;
+
+        $value = $type->outputFormat("0x0", null);
+        $this->assertEquals($value, false);
+    }
 }
