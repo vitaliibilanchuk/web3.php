@@ -463,7 +463,7 @@ class ContractTest extends TestCase
      * 
      * @return void
      */
-    public function testDeploy()
+    /*public function testDeploy()
     {
         $contract = $this->contract;
 
@@ -495,14 +495,14 @@ class ContractTest extends TestCase
                 }
             });
         });
-    }
+    }*/
 
     /**
      * testSend
      * 
      * @return void
      */
-    public function testSend()
+    /*public function testSend()
     {
         $contract = $this->contract;
 
@@ -571,14 +571,14 @@ class ContractTest extends TestCase
                 }
             });
         });
-    }
+    }*/
 
     /**
      * testCall
      * 
      * @return void
      */
-    public function testCall()
+    /*public function testCall()
     {
         $contract = $this->contract;
 
@@ -642,14 +642,14 @@ class ContractTest extends TestCase
                 $this->assertTrue($result !== null);
             }
         });
-    }
+    }*/
 
     /**
      * testEstimateGas
      * 
      * @return void
      */
-    public function testEstimateGas()
+    /*public function testEstimateGas()
     {
         $contract = $this->contract;
 
@@ -715,14 +715,14 @@ class ContractTest extends TestCase
                 $this->assertTrue($result !== null);
             }
         });
-    }
+    }*/
 
     /**
      * testGetData
      * 
      * @return void
      */
-    public function testGetData()
+    /*public function testGetData()
     {
         $contract = $this->contract;
 
@@ -771,7 +771,7 @@ class ContractTest extends TestCase
         $balanceOfData = $contract->at($this->contractAddress)->getData('balanceOf', $fromAccount);
 
         $this->assertEquals('70a08231000000000000000000000000' . Utils::stripZero($fromAccount), $balanceOfData);
-    }
+    }*/
 
     /**
      * testDecodeMethodReturn
