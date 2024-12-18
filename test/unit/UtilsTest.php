@@ -391,8 +391,8 @@ class UtilsTest extends TestCase
         $bn = Utils::toWei('-1.69', 'ether');
         $this->assertEquals('-1690000000000000000', $bn->toString());
 
+        $this->expectException(InvalidArgumentException::class);
         $bn = Utils::toWei('', 'ether');
-        $this->assertEquals('0', $bn->toString());
 
         try {
             $bn = Utils::toWei('0x5218', new stdClass);
@@ -578,8 +578,8 @@ class UtilsTest extends TestCase
      */
     public function testToBn()
     {
+        $this->expectException(InvalidArgumentException::class);
         $bn = Utils::toBn('');
-        $this->assertEquals($bn->toString(), '0');
 
         $bn = Utils::toBn(11);
         $this->assertEquals($bn->toString(), '11');
