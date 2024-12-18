@@ -3,6 +3,7 @@
 namespace Web3\Contracts\Types;
 
 use Web3\Contracts\ISolidityTypeFactory;
+use Exception;
 
 abstract class SolidityTypeBase implements IType {
     protected ?ISolidityTypeFactory $typeFactory;
@@ -112,15 +113,22 @@ abstract class SolidityTypeBase implements IType {
     }
 
     public function encode($value, $typeObj, $tailOffset) : EncodeResult {
-        $result = new EncodeResult();
-        $result->head = $this->inputFormat($value, $typeObj);
-        return $result;
+        try {
+            $result = new EncodeResult();
+            $result->head = $this->inputFormat($value, $typeObj);
+            return $result;
+        } catch(Exception $ex) {
+            throw new Exception("Failed to encode (" . $typeObj['type'] . ")" . $typeObj['name'] . ". Reason: " . $ex->getMessage(), 0, $ex);
+        }
     }
 
     public function decode($value, $typeObj, $offset) {
-        $length = $this->staticPartLength($typeObj);
-        $param = mb_substr($value, $offset * 2, $length * 2);
-
-        return $this->outputFormat($param, $typeObj);
+        try {
+            $length = $this->staticPartLength($typeObj);
+            $param = mb_substr($value, $offset * 2, $length * 2);
+            return $this->outputFormat($param, $typeObj);
+        } catch(Exception $ex) {
+            throw new Exception("Failed to decode (" . $typeObj['type'] . ")" . $typeObj['name'] . ". Reason: " . $ex->getMessage(), 0, $ex);
+        }
     }
 }
