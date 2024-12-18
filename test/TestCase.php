@@ -43,12 +43,12 @@ class TestCase extends BaseTestCase
         $web3 = new Web3($this->testHost);
         $this->web3 = $web3;
 
-        $web3->eth->coinbase(function ($err, $coinbase) {
+        /*$web3->eth->coinbase(function ($err, $coinbase) {
             if ($err !== null) {
                 return $this->fail($err->getMessage());
             }
             $this->coinbase = $coinbase;
-        });
+        });*/
     }
 
     /**

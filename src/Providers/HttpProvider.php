@@ -59,7 +59,7 @@ class HttpProvider extends Provider implements IProvider
                         $res = $method->transform($res, $method->outputFormatters);
                     }
                 } catch(Exception $ex) {
-                    return call_user_func($callback, $ex, null);
+                    return call_user_func($callback, "Result transforming failed: " . $ex->getMessage(), null);
                 }
 
                 return call_user_func($callback, null, $res);

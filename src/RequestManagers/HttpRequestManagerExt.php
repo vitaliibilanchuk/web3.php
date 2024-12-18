@@ -34,76 +34,26 @@ class HttpRequestManagerExt extends HttpRequestManager
         }
     }
 
-    /**
-     * sendPayload
-     *
-     * @param string $payload
-     * @param callable $callback
-     * @return void
-     */
-    public function sendPayload($payload, $callback)
+    protected function sendRawPayload($payload)
     {
-        if (!is_string($payload)) {
-            throw new \InvalidArgumentException('Payload must be string.');
-        }
+        $res = $this->client->post($this->host, [
+            'headers' => [
+                'content-type' => 'application/json'
+            ],
+            'body' => $payload,
+            'timeout' => $this->timeout,
+            'connect_timeout' => $this->timeout
+        ]);
+        /**
+         * @var StreamInterface $stream ;
+         */
+        $stream = $res->getBody();
 
-        try {
-            $res = $this->client->post($this->host, [
-                'headers' => [
-                    'content-type' => 'application/json'
-                ],
-                'body' => $payload,
-                'timeout' => $this->timeout,
-                'connect_timeout' => $this->timeout
-            ]);
-            /**
-             * @var StreamInterface $stream ;
-             */
-            $stream = $res->getBody();
+        $this->OnResponce([$this->host, $payload, $res->getStatusCode(), $stream->getContents()]);
 
-            $this->OnResponce([$this->host, $payload, $res->getStatusCode(), $stream->getContents()]);
+        $json = json_decode($stream);
+        $stream->close();
 
-            $json = json_decode($stream);
-            $stream->close();
-
-            if (JSON_ERROR_NONE !== json_last_error()) {
-                call_user_func($callback, new InvalidArgumentException('json_decode error: ' . json_last_error_msg()), null);
-            }
-            if (is_array($json)) {
-                // batch results
-                $results = [];
-                $errors = [];
-
-                foreach ($json as $result) {
-                    if (property_exists($result,'result')) {
-                        $results[] = $result->result;
-                    } else {
-                        if (isset($json->error)) {
-                            $error = $json->error;
-                            $errors[] = new RPCException(mb_ereg_replace('Error: ', '', $error->message), $error->code);
-                        } else {
-                            $results[] = null;
-                        }
-                    }
-                }
-                if (count($errors) > 0) {
-                    call_user_func($callback, $errors, $results);
-                } else {
-                    call_user_func($callback, null, $results);
-                }
-            } elseif (property_exists($json,'result')) {
-                call_user_func($callback, null, $json->result);
-            } else {
-                if (isset($json->error)) {
-                    $error = $json->error;
-
-                    call_user_func($callback, new RPCException(mb_ereg_replace('Error: ', '', $error->message), $error->code), null);
-                } else {
-                    call_user_func($callback, new RPCException('Something wrong happened: ' . print_r($json, true)), null);
-                }
-            }
-        } catch (RequestException $err) {
-            call_user_func($callback, $err, null);
-        }
+        return $json;
     }
 }
