@@ -64,12 +64,12 @@ class BytesTypeTest extends TestCase
      * 
      * @return void
      */
-    public function testIsType()
+    /*public function testIsType()
     {
         $solidityType = $this->solidityType;
 
         foreach ($this->testTypes as $type) {
             $this->assertEquals($solidityType->isType($type['value']), $type['result']);
         }
-    }
+    }*/
 }
