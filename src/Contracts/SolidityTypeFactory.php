@@ -41,6 +41,7 @@ class SolidityTypeFactory implements ISolidityTypeFactory {
             case 'bool': return new Boolean($this);
             case 'bytes': return new DynamicBytes($this);
             case 'dynamicBytes': return new DynamicBytes($this);
+            case 'int256':
             case 'int': return new Integer($this);
             case 'string': return new Str($this);
             case 'uint':
