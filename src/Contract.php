@@ -502,7 +502,7 @@ class Contract
                 }
             };
             if (count($functions) < 1) {
-                throw new InvalidArgumentException('Please make sure the method exists.');
+                throw new InvalidArgumentException("Please make sure the method [$method] exists.");
             }
             if (is_callable($callback) !== true) {
                 throw new \InvalidArgumentException('The last param must be callback function.');

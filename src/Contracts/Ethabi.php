@@ -90,11 +90,11 @@ class Ethabi
         return mb_substr(Utils::sha3($functionName), 0, 10);
     }
 
-    public function jsonMethodToString($inTypes)
+    public function jsonMethodToString($method)
     {
-        $types = $inTypes;
+        $types = $method;
         if ($types instanceof stdClass && isset($types->inputs)) {
-            $types = Utils::jsonToArray($types, 2);
+            $types = $method = Utils::jsonToArray($types);
         }
         if (is_array($types) && isset($types['inputs'])) {
             $types = $types['inputs'];
@@ -107,7 +107,7 @@ class Ethabi
 
         $typeObj["components"] = $types;
 
-        return $inTypes['name'] . $parametersTuple->getSignature($typeObj);
+        return $method['name'] . $parametersTuple->getSignature($typeObj);
     }
 
     /**
