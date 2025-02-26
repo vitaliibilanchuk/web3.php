@@ -118,11 +118,11 @@ class EthMethod extends JSONRPC implements IMethod
                         }
                     }
                     if ($isError) {
-                        throw new RuntimeException('Wrong type of ' . $this->method . ' method argument ' . $key . '.');
+                        throw new RuntimeException('Wrong type of ' . $this->method . ' method argument ' . $key . '. Value: ' . print_r($params[$key], true));
                     }
                 } else {
                     if (call_user_func([$rule, 'validate'], $params[$key]) === false) {
-                        throw new RuntimeException('Wrong type of ' . $this->method . ' method argument ' . $key . '.');
+                        throw new RuntimeException('Wrong type of ' . $this->method . ' method argument ' . $key . '. Value: ' . print_r($params[$key], true));
                     }
                 }
             } else {
