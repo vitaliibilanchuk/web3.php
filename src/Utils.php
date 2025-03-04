@@ -260,9 +260,10 @@ class Utils
         if (!is_string($value)) {
             throw new InvalidArgumentException('The value to sha3 function must be string.');
         }
-        if (strpos($value, '0x') === 0) {
+        // removed to accept any string value
+        /*if (strpos($value, '0x') === 0) {
             $value = self::hexToBin($value);
-        }
+        }*/
         $hash = Keccak::hash($value, 256);
 
         if ($hash === self::SHA3_NULL_HASH) {
