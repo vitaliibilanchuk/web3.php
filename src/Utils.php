@@ -260,10 +260,21 @@ class Utils
         if (!is_string($value)) {
             throw new InvalidArgumentException('The value to sha3 function must be string.');
         }
-        // removed to accept any string value
-        /*if (strpos($value, '0x') === 0) {
+
+        if (strpos($value, '0x') === 0) {
             $value = self::hexToBin($value);
-        }*/
+        }
+
+        $hash = Keccak::hash($value, 256);
+
+        if ($hash === self::SHA3_NULL_HASH) {
+            return null;
+        }
+        return '0x' . $hash;
+    }
+
+    public static function sha3RawData(string $value)
+    {
         $hash = Keccak::hash($value, 256);
 
         if ($hash === self::SHA3_NULL_HASH) {
