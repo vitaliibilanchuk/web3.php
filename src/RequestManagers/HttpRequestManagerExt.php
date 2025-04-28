@@ -9,12 +9,9 @@
 
 namespace Web3\RequestManagers;
 
-use InvalidArgumentException;
 use Psr\Http\Message\StreamInterface;
-use RuntimeException as RPCException;
 
 use GuzzleHttp\Exception\RequestException;
-use GuzzleHttp\Client;
 use Web3\RequestManagers\HttpRequestManager;
 
 class HttpRequestManagerExt extends HttpRequestManager
@@ -36,14 +33,30 @@ class HttpRequestManagerExt extends HttpRequestManager
 
     protected function sendRawPayload($payload)
     {
-        $res = $this->client->post($this->host, [
-            'headers' => [
-                'content-type' => 'application/json'
-            ],
-            'body' => $payload,
-            'timeout' => $this->timeout,
-            'connect_timeout' => $this->timeout
-        ]);
+        try
+        {
+            $res = $this->client->post($this->host, [
+                'headers' => [
+                    'content-type' => 'application/json'
+                ],
+                'body' => $payload,
+                'timeout' => $this->timeout,
+                'connect_timeout' => $this->timeout
+            ]);
+        } catch(\Throwable $ex) {
+            $code = 0;
+            $content = $ex->getMessage();
+            if($ex instanceof RequestException) {
+                $responce = $ex->getResponse();
+                if($responce) {
+                    $code = $responce->getStatusCode();
+                    $stream = $responce->getBody();
+                    $content = $stream->getContents();
+                }
+            }
+            $this->OnResponce([$this->host, $payload, $code, $content]);
+            throw $ex;
+        }
         /**
          * @var StreamInterface $stream ;
          */
