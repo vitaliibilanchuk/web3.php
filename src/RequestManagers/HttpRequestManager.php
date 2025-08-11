@@ -110,6 +110,8 @@ class HttpRequestManager extends RequestManager implements IRequestManager
                 } else {
                     call_user_func($callback, null, $results);
                 }
+            } elseif ($json === null) {
+                call_user_func($callback, new RPCException('Json result is null'), null);
             } elseif (property_exists($json,'result')) {
                 call_user_func($callback, null, $json->result);
             } else {
