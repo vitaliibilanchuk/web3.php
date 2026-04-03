@@ -36,6 +36,9 @@ class SolidityTypeFactory implements ISolidityTypeFactory {
             }
             return new StaticArrayType($this);
         }
+        if (preg_match('/^bytes([1-9]|[12][0-9]|3[0-2])$/', $typeName) === 1) {
+            return new Bytes($this);
+        }
         switch($typeName) {
             case 'address': return new Address($this);
             case 'bool': return new Boolean($this);
@@ -51,9 +54,6 @@ class SolidityTypeFactory implements ISolidityTypeFactory {
             case 'uint64':
             case 'uint128':
             case 'uint256': return new Uinteger($this);
-            case 'bytes8':
-            case 'bytes16':
-            case 'bytes32': return new Bytes($this);
             case 'tuple': 
             {
                 if(isset($typeObj['components']) && Tuple::isDynamicTuple($typeObj, $this)) {
