@@ -13,10 +13,10 @@ namespace Web3\RequestManagers;
 
 use InvalidArgumentException;
 use Psr\Http\Message\StreamInterface;
-use RuntimeException as RPCException;
 use Psr\Http\Message\ResponseInterface;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Client;
+use Web3\Exceptions\JsonRpcException;
 use Web3\RequestManagers\RequestManager;
 use Web3\RequestManagers\IRequestManager;
 
@@ -97,9 +97,8 @@ class HttpRequestManager extends RequestManager implements IRequestManager
                     if (property_exists($result,'result')) {
                         $results[] = $result->result;
                     } else {
-                        if (isset($json->error)) {
-                            $error = $json->error;
-                            $errors[] = new RPCException(mb_ereg_replace('Error: ', '', $error->message), $error->code);
+                        if (isset($result->error)) {
+                            $errors[] = JsonRpcException::fromErrorObject($result->error);
                         } else {
                             $results[] = null;
                         }
@@ -111,16 +110,14 @@ class HttpRequestManager extends RequestManager implements IRequestManager
                     call_user_func($callback, null, $results);
                 }
             } elseif ($json === null) {
-                call_user_func($callback, new RPCException('Json result is null'), null);
+                call_user_func($callback, new JsonRpcException('Json result is null'), null);
             } elseif (property_exists($json,'result')) {
                 call_user_func($callback, null, $json->result);
             } else {
                 if (isset($json->error)) {
-                    $error = $json->error;
-
-                    call_user_func($callback, new RPCException(mb_ereg_replace('Error: ', '', $error->message), $error->code), null);
+                    call_user_func($callback, JsonRpcException::fromErrorObject($json->error), null);
                 } else {
-                    call_user_func($callback, new RPCException('Something wrong happened: ' . print_r($json, true)), null);
+                    call_user_func($callback, new JsonRpcException('Something wrong happened: ' . print_r($json, true)), null);
                 }
             }
         } catch (RequestException $err) {
